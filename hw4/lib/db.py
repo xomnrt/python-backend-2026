@@ -1,4 +1,5 @@
 import contextlib
+import os
 from collections.abc import AsyncIterator
 
 from fastapi import FastAPI
@@ -6,7 +7,10 @@ from psycopg import AsyncConnection
 from psycopg_pool import AsyncConnectionPool
 
 # Строка подключения
-DATABASE_URL = "postgresql://user:password@postgres:5432/master"
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql://user:password@postgres:5432/master",
+)
 
 pool: AsyncConnectionPool | None = None
 

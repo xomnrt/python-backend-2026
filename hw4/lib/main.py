@@ -45,16 +45,6 @@ class Cart(BaseModel):
     items: list[CartItem]
     price: float
 
-carts: dict[int, Cart] = {}
-items: dict[int, Item] = {}
-
-current_key = 0
-
-def generate_key() -> int:
-    global current_key
-    current_key = current_key + 1
-    return current_key
-
 @app.post('/cart')
 async def create_cart(conn = Depends(get_db_connection)) -> Cart:
     async with conn.cursor() as cur:

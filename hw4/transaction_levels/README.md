@@ -9,16 +9,16 @@
 Сначала запустите PostgreSQL и приложение:
 
 ```bash
-docker compose up -d postgres app
+docker compose up -d --build postgres app
 ```
 
 Затем запустите нужный сценарий:
 
 ```bash
-docker compose exec app python -m lib.transaction_levels.dirty_read
-docker compose exec app python -m lib.transaction_levels.non_repeatable_read
-docker compose exec app python -m lib.transaction_levels.phantom_read
-docker compose exec app python -m lib.transaction_levels.serialization_anomaly
+docker compose exec app python -m transaction_levels.dirty_read
+docker compose exec app python -m transaction_levels.non_repeatable_read
+docker compose exec app python -m transaction_levels.phantom_read
+docker compose exec app python -m transaction_levels.serialization_anomaly
 ```
 
 Скрипты запускаются как модули Python, поэтому используется формат `python -m`. В самих скриптах нет итоговых сообщений: вывод показывает только порядок SQL-команд и прочитанные значения.
@@ -53,7 +53,7 @@ Dirty read — чтение одной транзакцией данных, ко
 4. T2 повторно читает Alice.
 
 ```bash
-docker compose exec app python -m lib.transaction_levels.dirty_read
+docker compose exec app python -m transaction_levels.dirty_read
 
 T1 (Read Committed): BEGIN ISOLATION LEVEL READ COMMITTED
 T2 (Read Uncommitted): BEGIN ISOLATION LEVEL READ UNCOMMITTED
@@ -91,7 +91,7 @@ Non-repeatable read — ситуация, когда одна транзакци
 Вывод скрипта:
 
 ```bash
-docker compose exec app python -m lib.transaction_levels.non_repeatable_read
+docker compose exec app python -m transaction_levels.non_repeatable_read
 
 T1 (Read Committed): BEGIN ISOLATION LEVEL READ COMMITTED
 T2 (Read Committed): BEGIN ISOLATION LEVEL READ COMMITTED
@@ -129,7 +129,7 @@ Phantom read — появление новых строк, подходящих 
 Вывод скрипта:
 
 ```bash
-docker compose exec app python -m lib.transaction_levels.phantom_read
+docker compose exec app python -m transaction_levels.phantom_read
 
 T1 (Repeatable Read): BEGIN ISOLATION LEVEL REPEATABLE READ
 T2 (Read Committed): BEGIN ISOLATION LEVEL READ COMMITTED
@@ -168,7 +168,7 @@ T2: UPDATE doctors SET on_call = false WHERE id = 2
 Вывод скрипта:
 
 ```bash
-docker compose exec app python -m lib.transaction_levels.serialization_anomaly
+docker compose exec app python -m transaction_levels.serialization_anomaly
 
 T1 (Repeatable Read): BEGIN ISOLATION LEVEL REPEATABLE READ
 T2 (Repeatable Read): BEGIN ISOLATION LEVEL REPEATABLE READ
